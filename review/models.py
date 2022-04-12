@@ -1,79 +1,88 @@
 from django.db import models
 from django.contrib.auth.models import User
-from cloudinary.models import CloudinaryField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from phone_field import PhoneField
+
 
 # Create your models here.
 class Profile(models.Model):
-    username = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    profile_info = models.TextField()
-    picture = CloudinaryField('image')
-    name = models.CharField(max_length=50)
-
-    def save_profile(self):
-        self.save
-
-    def delete_user(self):
-        self.delete()
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile')
+    bio = models.TextField(max_length=400, blank=True)
+    name = models.CharField(blank=True, max_length=120)
+    profile_pic = models.ImageField(upload_to='images/',default='v1639327874/images/default_drurzc.jpg')
+    phone_number = PhoneField(max_length=15, blank=True)
     
-    @classmethod
-    def edit_profile(cls, id, value):
-        cls.objects.filter(id=id).update(profile_name=value)
-
     def __str__(self):
-        return self.user.username
-    
+        return f'{self.user.username} Profile'
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
 
 class Post(models.Model):
-    image = CloudinaryField('image')
-    title = models.CharField(max_length=30, default='')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default='', null=True ,related_name='author')
-    likes = models.IntegerField(default=0)
-    caption = models.TextField(max_length=300)
+    title = models.CharField(max_length=200)
+    description = models.TextField(max_length=300)
+    url = models.URLField(max_length=400)
+    photo = models.ImageField(upload_to='images/')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    upload_date = models.DateTimeField(auto_now_add=True, blank=True)
+    technologies_used = models.CharField(max_length=200, blank=True)
 
-    @classmethod
-    def all_posts(cls) :
-        posts = cls.objects.all()
-        return posts
-
-    def save_post(self):
-        self.save()
+    def __str__(self):
+        return f'{self.title}'
 
     def delete_post(self):
         self.delete()
 
     @classmethod
-    def update_post(cls, id, value):
-        cls.objects.filter(id=id).update(image=value)
+    def search_project(cls, title):
+        return cls.objects.filter(title__icontains=title).all()
 
-class Comment(models.Model):
-    comment_content = models.CharField(max_length=300)
-    username = models.ForeignKey(User,on_delete=models.CASCADE)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE)
+    @classmethod
+    def all_posts(cls):
+        return cls.objects.all()
 
-    def save_comment(self):
+    def save_post(self):
         self.save()
 
+class Rating(models.Model):
+    rating = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+        (10, '10'),
+    )
+    
+    usability = models.IntegerField(choices=rating, blank=True, default='1')
+    content = models.IntegerField(choices=rating, blank=True,default='1')
+    design = models.IntegerField(choices=rating, default='1', blank=True,)
+    score = models.FloatField(default=0, blank=True)
+    design_average = models.FloatField(default=0, blank=True)
+    usability_average = models.FloatField(default=0, blank=True)
+    content_average = models.FloatField(default=0, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='rater')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='ratings', null=True)
 
-class Like(models.Model):
-    username = models.ForeignKey(User,on_delete=models.CASCADE)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE)
-    control = models.CharField(max_length=50,unique=True, null=True)
+    def save_rating(self):
+        self.save()
+
+    @classmethod
+    def get_ratings(cls, id):
+        ratings = Rating.objects.filter(post_id=id).all()
+        return ratings
 
     def __str__(self):
-        return self.control
-
-    def save_like(self):
-        self.save()
-
-
-class Follow(models.Model):
-    username = models.ForeignKey(User, related_name='follower', on_delete=models.CASCADE)
-    followed = models.ForeignKey(User, related_name='followed', on_delete=models.CASCADE)
-    follow_id = models.CharField(max_length=50,unique=True, null=True)
-
-    def __str__(self):
-        return self.follow_id
-
-    def save_like(self):
-        self.save()
-
+        return f'{self.post} Rating'
