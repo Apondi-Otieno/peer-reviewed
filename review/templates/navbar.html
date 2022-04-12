@@ -1,1 +1,253 @@
 <!DOCTYPE html>
+<style>
+  body {
+    font-family: "Lato", sans-serif;
+  }
+  
+  .sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color:white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  .sidebarnav{
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color:white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  
+  
+  .sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .sidebarnav a{
+    /* padding: 8px 8px 8px 32px; */
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidebar a:hover {
+    color:wheat;
+  }
+
+  .sidebarnav a:hover{
+    color:wheat;
+  }
+  
+  .sidebarnav .closebtn{
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  .sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  .openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+  }
+  
+  .openbtn:hover {
+    background-color: #444;
+  }
+  
+  #main {
+    transition: margin-left .5s;
+
+    
+  }
+  .menu{
+    transition: margin-left .5s;
+  }
+  #main p{
+    background-color: white;
+    color: rgb(146, 137, 137);
+   
+  }
+  #menu p{
+    background-color: white;
+    color: rgb(146, 137, 137);
+  }
+   
+  #main small{
+    font-style: underline;
+  }
+  #menu small{
+    font-style: underline;
+  }
+  #main ul li{
+    list-style: none;
+    display: inline-flex;
+    padding-right: 150px;
+    
+  }
+  /* #main ul li i{
+   float: right;
+    
+  } */
+  #menu ul li{
+    list-style: none;
+    display: inline-flex;
+    padding-right: 40px;
+  
+   
+    
+  }
+  #list{
+    padding-left: 50px;
+  }
+  /* #submit{
+    padding-left: 100px;
+    height: 50px;
+   
+  } */
+  #submit button{
+    background-color: black;
+    color: white;
+    margin-left: -250px;
+  
+  }
+  #submit button a{
+    color: white;
+  }
+ 
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+  }
+  </style>
+
+<nav class="navbar navbar-light bg-dark justify-content-center" style="margin-bottom: -14px;">
+    <a class="navbar-brand" href="#" style="color: white;">#StopWarInUkraine <i class="fa fa-flag" aria-hidden="true"></i> Save the children</a>
+  </nav>
+
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: -14px;">
+    <div id="mySidebar" class="sidebar">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"> close ×</a>
+      <a href="#">English</a>
+      <a href="#">Chinese</a>
+      <a href="#">Japanese</a>
+      <a href="#">French</a>
+      <a href="#">Espano</a>
+      <a href="#">Korean</a>
+    </div>
+    
+    <div id="main">
+      <ul>
+        <li id="listone">
+          <p class="openbtn" onclick="openNav()"><small> English </small></p>
+        </li>
+        <li id="list">The awards of design, creativity and innovation on the internet</li>
+      
+        <li><i class="fa fa-instagram" aria-hidden="true"></i> <i class="fa fa-twitter" aria-hidden="true"></i> <i class="fa fa-facebook" aria-hidden="true"></i></li>
+      </ul>
+    
+  </div>
+
+   <hr>
+       
+  <nav class="navbar  navbar-expand-lg navbar-light bg-light" style="margin-top: -14px;">
+  </nav>
+  <div id="mySidebarnav" class="sidebarnav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNavbar()"> close ×</a>
+    <a href="/login">Register/Login</a>
+    <a href="">Home</a>
+    <a href="#">Winners</a>
+    <a href="#">Nominees</a>
+    <a href="#">Collections</a>
+    <a href="#">Academy</a>
+    <a href="#">Proffesional Directory</a>
+    <a href="#">Jobs & Talent</a>
+  </div>
+  
+  <div id="menu">
+    <ul>
+      <li id= "listone">
+        <p class="openbtn" onclick="openNavbar()"><small>☰ Menu </small></p>
+      </li>
+      <li>
+        <div class="form-outline">
+          <form action=" {%url 'search_results' %} ">
+            <input type="search" id="form1" class="form-control" name="post" placeholder="search" />
+          </form>
+          
+        </div>
+ 
+      </li>
+    
+      <li><b style="font-size: 30px;">Awwwards.</b></li>
+      {% if user.is_authenticated %}
+      <li><a href="/logout">Logout</a> </li>
+      <li><a href="{% url 'profile' user.username  %}"> <img src="{{user.profile.profile_pic.url}}"  alt= "" class=" user profile-img rounded-circle" style="width: 10%;">{{user.username}}</a></li>
+      {% else %}
+      <li> <button> <a href="/login">Register/Login</a> </button></li>
+      {% endif %}
+
+      <li id="submit"> <button><a href="{%url 'post'%} ">Submit Your Site</a></button></li>
+  
+    </ul>
+  
+     
+
+  </div>
+  
+    
+    
+    <script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("main").style.marginLeft= "0";
+    }
+    </script>
+      <script>
+        function openNavbar() {
+          document.getElementById("mySidebarnav").style.width = "250px";
+          document.getElementById("menu").style.marginLeft = "250px";
+        }
+        
+        function closeNavbar() {
+          document.getElementById("mySidebarnav").style.width = "0";
+          document.getElementById("menu").style.marginLeft= "0";
+        }
+        </script>
