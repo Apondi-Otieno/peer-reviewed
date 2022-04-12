@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import  Post,Profile
 from .serializer import Postserializer,ProfileSerializer
-from rest_framework import 
+from rest_framework import status
 # Create your views here.
 
 
