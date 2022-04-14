@@ -1,17 +1,15 @@
-from django.shortcuts import render,redirect, get_object_or_404
-from .forms import NewUserForm
+from django.shortcuts import render
 import datetime as dt
-from django.contrib.auth import login
-from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .models import Follow, Post, Profile, Comment, Like
-from .forms import ProfileUpdateForm, UserUpdateForm, NewPostForm, CommentForm
-from django.http import HttpResponseRedirect
-
-
+from .models import Post,Profile,Rating
+from django.http  import Http404,HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import  render, redirect,get_object_or_404
+from .forms import NewUserForm,PostForm,RatingForm,UpdateUserForm,UpdateUserProfileForm
+from django.contrib.auth import login,authenticate,logout
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 import random
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -46,7 +44,7 @@ def home(request):
         print(random_post.photo)
     except Post.DoesNotExist:
         posts = None
-    return render(request, 'main/home.html',{'form':form,'current_user':current_user,'random_post': random_post,'posts':posts})
+    return render(request, 'home.html',{'form':form,'current_user':current_user,'random_post': random_post,'posts':posts})
 def postProject(request):
     current_user = request.user
     if request.method == "POST":
@@ -59,7 +57,7 @@ def postProject(request):
     else:
         form = PostForm()
 
-    return render(request,'main/post.html',{'form':form,'current_user':current_user})    
+    return render(request,'post.html',{'form':form,'current_user':current_user})    
 
 @login_required(login_url='login')
 def project(request, post):
@@ -111,7 +109,7 @@ def project(request, post):
             return HttpResponseRedirect(request.path_info)
     else:
         form = RatingForm()
-    return render(request, 'main/project.html', {'post': post,'rating_form': form,'rating_status': rating_status,'current_user':current_user,'post_form':post_form})
+    return render(request, 'project.html', {'post': post,'rating_form': form,'rating_status': rating_status,'current_user':current_user,'post_form':post_form})
 
 
 
@@ -125,7 +123,7 @@ def register_request(request):
 			return redirect(login_request)
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
-	return render (request=request, template_name="main/register.html", context={"register_form":form})
+	return render (request=request, template_name="register.html", context={"register_form":form})
 
 
 def login_request(request):
@@ -144,7 +142,7 @@ def login_request(request):
 		else:
 			messages.error(request,"Invalid username or password.")
 	form = AuthenticationForm()
-	return render(request=request,template_name="main/login.html", context={"login_form":form})
+	return render(request=request,template_name="login.html", context={"login_form":form})
 
 
 def logout_request(request):
@@ -158,10 +156,10 @@ def search_results(request):
         searched_post =Post.search_project(search_term)
         message =f"{search_term}"
 
-        return render(request,'main/search.html',{"message":message,"posts":searched_post})
+        return render(request,'search.html',{"message":message,"posts":searched_post})
     else:
         message ="You haven't searched for an image"
-        return render(request, 'main/search.html', {"message":message})    
+        return render(request, 'search.html', {"message":message})    
 
 
 @login_required(login_url='login')
@@ -184,7 +182,7 @@ def user_profile(request, username):
     user_posts = user_poster.posts.all()
     
     
-    return render(request, 'main/poster.html', {'user_poster': user_poster,'user_posts':user_posts,'post_form':post_form,'current_user':current_user})
+    return render(request, 'poster.html', {'user_poster': user_poster,'user_posts':user_posts,'post_form':post_form,'current_user':current_user})
 
 @login_required(login_url='login')
 def profile(request, username):
@@ -212,7 +210,7 @@ def profile(request, username):
         user_form = UpdateUserForm(instance=request.user)
         profile_form = UpdateUserProfileForm(instance=request.user.profile)
 
-    return render(request, 'main/profile.html', {'user_form':user_form,'profile_form':profile_form,'posts':posts,'post_form':post_form})
+    return render(request, 'profile.html', {'user_form':user_form,'profile_form':profile_form,'posts':posts,'post_form':post_form})
 
 
 class projectList(APIView):
