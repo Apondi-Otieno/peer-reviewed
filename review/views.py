@@ -24,7 +24,7 @@ from rest_framework import status
 
 
 def home(request):
-    
+   
     current_user = request.user
     if request.method == "POST":
         form = PostForm(request.POST,request.FILES)
@@ -35,16 +35,16 @@ def home(request):
             return HttpResponseRedirect(reverse("home"))
     else:
         form = PostForm()
-    
+   
     try:
         posts = Post.objects.all()
         posts = posts[::-1]
-        post_index = random.randint(0, len(posts)-1)
-        random_post = posts[post_index]
-        print(random_post.photo)
+        # post_index = random.randint(0, len(posts)-1)
+        # random_post = posts[post_index]
+        # print(random_post.photo)
     except Post.DoesNotExist:
         posts = None
-    return render(request, 'home.html',{'form':form,'current_user':current_user,'random_post': random_post,'posts':posts})
+    return render(request, 'home.html',{'form':form,'current_user':current_user,'posts':posts})
 def postProject(request):
     current_user = request.user
     if request.method == "POST":
@@ -65,7 +65,7 @@ def project(request, post):
     ratings = Rating.objects.filter(user=request.user, post=post).first()
     rating_status = None
     current_user=request.user
-    
+   
 
     if request.method == "POST":
         post_form = PostForm(request.POST,request.FILES)
