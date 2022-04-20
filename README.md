@@ -7,7 +7,7 @@ This is an app where you can have some of your best work reviewed by your peers.
 
 # Created by 
 
-Apondi otieno
+Apondi Otieno
 
 # Technologies Used
 
