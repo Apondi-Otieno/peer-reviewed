@@ -114,10 +114,7 @@
     padding-right: 150px;
    
   }
-  /* #main ul li i{
-   float: right;
-    
-  } */
+ 
   #menu ul li{
     list-style: none;
     display: inline-flex;
@@ -129,22 +126,19 @@
   #list{
     padding-left: 50px;
   }
-  /* #submit{
-    padding-left: 100px;
-    height: 50px;
-   
-  } */
-  #submit button{
-    background-color: black;
+  
+  button{
+    background-color: rgba(122, 112, 112, 0.151);
     color: white;
-    margin-left: -250px;
+    margin-left: 1rem;
   
   }
-  #submit button a{
-    color: white;
-  }
+  
  
-
+  #foot{
+    background-color: black;
+    height: 3rem;
+  }
   /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
   @media screen and (max-height: 450px) {
     .sidebar {padding-top: 15px;}
@@ -174,9 +168,8 @@
           <p class="openbtn" onclick="openNav()"><small> English </small></p>
         </li>
         <li id="list">The awards of design, creativity and innovation on the internet</li>
-      
-        <li><i class="fa fa-instagram" aria-hidden="true"></i> <i class="fa fa-twitter" aria-hidden="true"></i> <i class="fa fa-facebook" aria-hidden="true"></i></li>
-      </ul>
+     
+       </ul>
     
   </div>
 
@@ -216,19 +209,23 @@
       <li><a href="/logout">Logout</a> </li>
       <li><a href="{% url 'profile' user.username  %}"> <img src="{{user.profile.profile_pic.url}}"  alt= "" class=" user profile-img rounded-circle" style="width: 10%;">{{user.username}}</a></li>
       {% else %}
-      <li> <button> <a href="/login">Register/Login</a> </button></li>
+
+      <br><br>
+       <button> <a href="/login">Register/Login</a> </button>
       {% endif %}
 
-      <li id="submit"> <button><a href="{%url 'post'%} ">Submit Your Site</a></button></li>
+      <br><br>
+
+      <button id="submit"> <a href="{%url 'post'%} ">Submit Your Site</a></button>
   
     </ul>
   
      
 
-  </div>
   
-    
-    
+  
+ 
+    </div>
     <script>
     function openNav() {
       document.getElementById("mySidebar").style.width = "250px";
