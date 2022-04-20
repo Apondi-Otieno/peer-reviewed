@@ -60,7 +60,7 @@
     position: absolute;
     top: 0;
     right: 25px;
-    font-size: 36px;
+    font-size: px;
     margin-left: 50px;
   }
   .sidebar .closebtn {
@@ -110,7 +110,7 @@
   }
   #main ul li{
     list-style: none;
-    display: inline-flex;
+    /* display: inline-flex; */
     padding-right: 150px;
     
   }
@@ -144,7 +144,7 @@
     color: white;
   }
  
-  
+
   /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
   @media screen and (max-height: 450px) {
     .sidebar {padding-top: 15px;}
@@ -199,7 +199,7 @@
   <div id="menu">
     <ul>
       <li id= "listone">
-        <p class="openbtn" onclick="openNavbar()"><small>☰ Menu </small></p>
+        <p class="openbtn" onclick="openNavbar()"><small>☰  Menu </small></p>
       </li>
       <li>
         <div class="form-outline">
@@ -211,7 +211,7 @@
  
       </li>
     
-      <li><b style="font-size: 30px;">Awwwards.</b></li>
+      <li><b style="font-size: 30px;">Reviewwd.</b></li>
       {% if user.is_authenticated %}
       <li><a href="/logout">Logout</a> </li>
       <li><a href="{% url 'profile' user.username  %}"> <img src="{{user.profile.profile_pic.url}}"  alt= "" class=" user profile-img rounded-circle" style="width: 10%;">{{user.username}}</a></li>
